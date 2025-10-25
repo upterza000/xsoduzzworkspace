@@ -2,7 +2,9 @@ services:
   - type: web
     name: rich-game-card-bot
     runtime: node
-    buildCommand: npm install
+    region: singapore
+    plan: free
+    buildCommand: npm install --legacy-peer-deps
     startCommand: npm start
     healthCheckPath: /api/status
     envVars:
@@ -11,4 +13,8 @@ services:
       - key: PORT
         value: 10000
       - key: NODE_VERSION
-        value: 18
+        value: "18"
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: "true"
+      - key: PUPPETEER_CACHE_DIR
+        value: /opt/render/.cache/puppeteer

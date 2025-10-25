@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const fs = require('fs');
 const path = require('path');
 const GameAssetManager = require('./gameAssetManager');
@@ -18,9 +18,23 @@ class GameCardGenerator {
     }
 
     async generateCard(gameData) {
+        // ค้นหา Chrome/Chromium executable
+        const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || 
+                             process.env.CHROME_BIN ||
+                             '/usr/bin/chromium-browser' ||
+                             '/usr/bin/chromium' ||
+                             '/usr/bin/google-chrome';
+        
         const browser = await puppeteer.launch({ 
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            headless: 'new',
+            executablePath: fs.existsSync(executablePath) ? executablePath : undefined,
+            args: [
+                '--no-sandbox', 
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu'
+            ]
         });
         
         const page = await browser.newPage();
