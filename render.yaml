@@ -3,7 +3,7 @@ services:
     name: rich-game-card-bot
     runtime: node
     plan: free
-    buildCommand: npm ci && apt-get update && apt-get install -y chromium-browser || npm ci
+    buildCommand: bash build.sh
     startCommand: npm start
     healthCheckPath: /api/status
     autoDeploy: true
