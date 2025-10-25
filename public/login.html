@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - PG Game Card Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: var(--space-md);
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: var(--space-xl);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: var(--space-lg);
+        }
+
+        .login-logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: var(--space-sm);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+
+        .login-logo i {
+            font-size: 4rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .login-logo p {
+            color: var(--gray-600);
+            margin: var(--space-sm) 0 0 0;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            margin-top: var(--space-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-lg);
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: var(--space-xs);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            z-index: 1;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-md) var(--space-md) var(--space-md) 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            z-index: 2;
+            padding: var(--space-xs);
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: var(--space-md);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: var(--space-sm);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: var(--space-sm);
+        }
+
+        .loading-spinner.show {
+            display: inline-block;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: var(--space-lg);
+                margin: var(--space-sm);
+            }
+
+            .login-logo img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .login-logo i {
+                font-size: 3rem;
+            }
+
+            .login-logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="game_assets/logos/Pg.png" alt="PG Logo" />
+                <h1>PG Game Card</h1>
+                <p>เข้าสู่ระบบเพื่อจัดการการ์ดเกม</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="error-message" id="errorMessage"></div>
+                
+                <div class="form-group">
+                    <label for="username">ชื่อผู้ใช้งาน</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" class="form-input" required 
+                               placeholder="กรอกชื่อผู้ใช้งาน" autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" class="form-input" required 
+                               placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-spinner fa-spin loading-spinner" id="loadingSpinner"></i>
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('loginBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            console.log('setLoading called with:', loading);
+            
+            try {
+                if (loading) {
+                    btn.disabled = true;
+                    spinner.classList.add('show');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin loading-spinner show"></i>กำลังเข้าสู่ระบบ...';
+                    console.log('Button set to loading state');
+                } else {
+                    btn.disabled = false;
+                    spinner.classList.remove('show');
+                    btn.innerHTML = 'เข้าสู่ระบบ';
+                    console.log('Button reset to normal state');
+                }
+            } catch (error) {
+                console.error('Error in setLoading:', error);
+                // Force reset if there's an error
+                btn.disabled = false;
+                btn.innerHTML = 'เข้าสู่ระบบ';
+            }
+        }
+
+        function showError(message) {
+            console.log('showError called with:', message);
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            console.log('Error displayed, resetting loading state...');
+            
+            // Force reset loading state when showing error
+            setLoading(false);
+        }
+
+        function hideError() {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'none';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Prevent double submission
+            const btn = document.getElementById('loginBtn');
+            if (btn.disabled) {
+                console.log('Button already disabled, preventing double submission');
+                return;
+            }
+            
+            hideError();
+            setLoading(true);
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (!username || !password) {
+                showError('กรุณากรอกชื่อผู้ใช้งานและรหัสผ่าน');
+                return; // showError will reset loading state
+            }
+
+            // Timeout protection - force reset loading after 10 seconds
+            const timeoutId = setTimeout(() => {
+                console.log('Login timeout - forcing button reset');
+                setLoading(false);
+                showError('การเชื่อมต่อใช้เวลานานเกินไป กรุณาลองใหม่');
+            }, 10000);
+
+            try {
+                console.log('Attempting login for user:', username);
+                
+                const controller = new AbortController();
+                const timeoutSignal = setTimeout(() => controller.abort(), 8000);
+                
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutSignal);
+                clearTimeout(timeoutId);
+
+                console.log('Login response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Login result:', result);
+
+                if (result.success) {
+                    console.log('Login successful, redirecting...');
+                    // เก็บข้อมูล session
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('loginTime', Date.now().toString());
+                    
+                    // เปลี่ยนหน้าไปยัง dashboard
+                    window.location.replace('/');
+                } else {
+                    // Show error message for failed login
+                    console.log('Login failed with message:', result.message);
+                    showError(result.message || 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง');
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                console.error('Login error:', error);
+                
+                if (error.name === 'AbortError') {
+                    showError('การเชื่อมต่อใช้เวลานานเกินไป กรุณาลองใหม่อีกครั้ง');
+                } else if (error.message.includes('HTTP 401')) {
+                    showError('ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง');
+                } else {
+                    showError('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+                }
+            }
+        });
+
+        // Force reset button if it gets stuck (emergency reset)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                console.log('Emergency reset triggered by Escape key');
+                setLoading(false);
+            }
+        });
+
+        // Double-click to force reset (emergency)
+        document.getElementById('loginBtn').addEventListener('dblclick', function() {
+            console.log('Emergency reset triggered by double-click');
+            setLoading(false);
+        });
+
+        // ตรวจสอบว่าเข้าสู่ระบบแล้วหรือไม่ (แบบ async)
+        async function checkExistingAuth() {
+            try {
+                const response = await fetch('/api/check-auth', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.authenticated) {
+                    window.location.replace('/');
+                }
+            } catch (error) {
+                console.log('Not authenticated, staying on login page');
+            }
+        }
+        
+        // Check auth on page load
+        checkExistingAuth();
+    </script>
+</body>
+</html>

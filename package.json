@@ -1,0 +1,51 @@
+{
+  "name": "rich-game-card-generator",
+  "version": "2.0.0",
+  "description": "ระบบสร้างการ์ดเกมและส่งไปยัง Telegram Channel - เวอร์ชันปรับปรุงใหม่",
+  "main": "main.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "web": "node server.js",
+    "dev": "node server.js",
+    "test": "node main.js test",
+    "single": "node main.js single",
+    "multiple": "node main.js multiple",
+    "auto": "node main.js auto",
+    "bot": "node bot.js",
+    "update-test": "node update-new-version.js",
+    "send-channel": "node send-to-channel.js",
+    "send-single": "node send-single.js",
+    "send-random": "node send-random-card.js",
+    "send-multiple-random": "node send-multiple-random.js",
+    "install-deps": "npm install"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "game",
+    "card",
+    "generator",
+    "canvas",
+    "flexbox",
+    "logo-centering",
+    "compact-design",
+    "win-rate-90+"
+  ],
+  "author": "Rich Game Card System",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.18.2",
+    "multer": "^1.4.5-lts.1",
+    "node-telegram-bot-api": "^0.64.0",
+    "node-vibrant": "^4.0.3",
+    "puppeteer": "^21.5.0",
+    "sharp": "^0.34.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

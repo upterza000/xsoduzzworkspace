@@ -1,0 +1,6 @@
+{
+  "isEnabled": true,
+  "intervalHours": 6,
+  "cardType": "random",
+  "specificGame": null
+}

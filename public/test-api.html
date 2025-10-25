@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Card Generation</title>
+</head>
+<body>
+    <h1>ทดสอบการสร้างการ์ดพร้อมโลโก้แต่งการ์ด</h1>
+    <button onclick="testCardGeneration()">สร้างการ์ดทดสอบ</button>
+    <div id="result"></div>
+
+    <script>
+// สคริปต์ทดสอบการสร้างการ์ดผ่าน API
+// เพื่อดูว่าโลโก้แต่งการ์ดแสดงครบหรือไม่
+
+function testCardGeneration() {
+    const testData = {
+        botToken: 'test',
+        channelId: 'test'
+    };
+
+    document.getElementById('result').innerHTML = 'กำลังสร้างการ์ด...';
+
+    fetch('http://localhost:3000/api/generate/single', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(testData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('API Response:', data);
+        if (data.success) {
+            console.log('การ์ดสร้างสำเร็จ!');
+            console.log('URL:', data.data.cardUrl);
+            console.log('เกม:', data.data.gameData.name);
+            
+            document.getElementById('result').innerHTML = `
+                <h3>การ์ดสร้างสำเร็จ!</h3>
+                <p>เกม: ${data.data.gameData.name}</p>
+                <p>URL: <a href="${data.data.cardUrl}" target="_blank">${data.data.cardUrl}</a></p>
+                <img src="${data.data.cardUrl}" style="max-width: 300px;" />
+            `;
+        } else {
+            console.error('เกิดข้อผิดพลาด:', data.error);
+            document.getElementById('result').innerHTML = `<p style="color: red;">เกิดข้อผิดพลาด: ${data.error}</p>`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error}</p>`;
+    });
+}
+    </script>
+</body>
+</html>
